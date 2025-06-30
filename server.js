@@ -1,4 +1,6 @@
 // server.js
+require('dotenv').config();
+
 if (!process.env.STRIPE_SECRET_KEY) {
   console.error('ERROR: STRIPE_SECRET_KEY is not set. Please set it in your Vercel project environment variables.');
 }
@@ -10,11 +12,25 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 
-// CORS configuration for production
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'http://localhost:4242',
+  'http://127.0.0.1:4242',
+  'https://nuvepet.com',
+  'https://www.nuvepet.com'
+];
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-domain.vercel.app', 'https://your-domain.com'] 
-    : ['http://localhost:3000', 'http://localhost:4242'],
+  origin: function(origin, callback) {
+    // allow requests with no origin (like mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
@@ -28,9 +44,9 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Map your product IDs to Stripe price IDs
 const PRODUCT_PRICE_MAP = {
-  1: 'price_1RfUliDfRnaFvmpAk4NWnx01', // Cat Scratcher - 429 kr
-  2: 'price_1RfUlhDfRnaFvmpAvVrgYaEf', // Stone Diamond Bowl - 399 kr
-  3: 'price_1RfUlhDfRnaFvmpAHLwbXNNb', // Premium Cat Bag - 699 kr
+  1: 'price_1RfV0FDfRnaFvmpAByGd7MhH', // Cat Scratcher - 429 kr
+  2: 'price_1RfV1LDfRnaFvmpAksIRqLoV', // Stone Diamond Bowl - 399 kr
+  3: 'price_1RfV0dDfRnaFvmpAB3im1OvA', // Premium Cat Bag - 699 kr
   4: 'price_1RfV1kDfRnaFvmpAiUhxekEj', // Fountain (if needed) - 349 kr
 };
 
