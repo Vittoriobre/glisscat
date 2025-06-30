@@ -1903,7 +1903,7 @@
 
             try {
                 // Send donation to backend to create Stripe Checkout session
-                const response = await fetch('http://localhost:4242/create-donation-session', {
+                const response = await fetch('/api/create-donation-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ amount, message, email })
@@ -1992,10 +1992,10 @@
                     return;
                 }
 
-                console.log('Making API call to:', 'http://localhost:4242/create-checkout-session');
+                console.log('Making API call to:', '/api/create-checkout-session');
                 console.log('Request body:', JSON.stringify({ items: validItems }));
                 
-                const response = await fetch('http://localhost:4242/create-checkout-session', {
+                const response = await fetch('/api/create-checkout-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ items: validItems })
