@@ -2,18 +2,12 @@
   "name": "nuvepet-website",
   "version": "1.0.0",
   "description": "Nuvepet Premium Pet Products Website",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
     "build": "echo 'No build step required'"
   },
   "dependencies": {
-    "cors": "^2.8.5",
     "debug": "^4.4.1",
-    "dotenv": "^17.0.0",
-    "express": "^4.21.2",
-    "serverless-http": "^3.2.0",
     "stripe": "^18.2.1"
   },
   "engines": {

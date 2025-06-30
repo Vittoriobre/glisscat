@@ -2,40 +2,29 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/server.js",
-      "use": "@vercel/node"
-    },
-    { "src": "public/**", "use": "@vercel/static" }
+      "src": "public/**",
+      "use": "@vercel/static"
+    }
   ],
   "routes": [
-    { 
-      "src": "/api/(.*)", 
-      "dest": "api/server.js"
-  },
-
-  { "src": "/(.*)", "dest": "/public/$1" },
     {
-      "src": "/favicon.ico",
-      "dest": "/frontend/favicon.ico"
+      "src": "/api/create-checkout-session",
+      "dest": "/api/create-checkout-session.js"
     },
     {
-      "src": "/favicon.png",
-      "dest": "/frontend/favicon.png"
-    },
-    {
-      "src": "/js/(.*)",
-      "dest": "/frontend/js/$1"
+      "src": "/api/create-donation-session", 
+      "dest": "/api/create-donation-session.js"
     },
     {
       "src": "/legal",
-      "dest": "/legal"
+      "dest": "/public/legal.html"
     },
     {
       "src": "/(.*)",
-      "dest": "/server.js"
+      "dest": "/public/$1"
     }
   ],
   "env": {
     "NODE_ENV": "production"
   }
-} 
+}
