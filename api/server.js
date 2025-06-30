@@ -142,4 +142,6 @@ app.post('/create-donation-session', async (req, res) => {
   }
 });
 
-module.exports = serverless(app);
+const serverless = require('serverless-http');
+module.exports = serverless(app); // ✅ This is already correct
+
