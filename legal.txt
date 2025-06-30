@@ -1,0 +1,112 @@
+🛡️ Privacy Policy
+
+Last updated: June 2025
+1. Information We Collect
+
+We collect data you provide when you:
+
+    Place an order
+
+    Contact our customer service
+
+    Sign up for newsletters or promotions
+
+2. What Personal Data We Use
+
+    Name, email, phone number
+
+    Billing and shipping address
+
+    Payment details (processed securely by Stripe)
+
+    Order and communication history
+
+3. How We Use Your Data
+
+We use your data to:
+
+    Fulfill and confirm orders
+
+    Provide support and updates
+
+    Improve our services
+
+    Comply with legal requirements
+
+4. GDPR – Your Rights
+
+In line with Swedish and EU data protection law, you may:
+
+    Access or correct your data
+
+    Request deletion or restriction of use
+
+    Object to processing
+
+    Request data transfer
+
+For questions: privacy@nuvepet.com
+📜 Terms of Service
+
+Last updated: June 2025
+1. General
+
+By using this website, you agree to our terms. If you disagree, please do not use the service.
+2. Products and Pricing
+
+We offer premium pet products. All prices are in SEK and include VAT.
+3. Orders and Payment
+
+Payments are securely processed via Stripe. Orders are confirmed via email.
+
+We may cancel or refuse orders at our discretion.
+4. Shipping and Delivery
+
+    Shipping Cost: 49 SEK for orders under 500 SEK
+
+    Free Shipping: Orders over 500 SEK
+
+    Delivery Time: 3–9 business days
+
+    Products are shipped from Sweden when available; otherwise, from international warehouses.
+
+5. Returns and Refunds
+
+    30-day return policy on unopened items
+
+    Buyer must provide proof of damage for damaged items
+
+    Return shipping is the buyer’s responsibility
+
+    Refunds processed within 14 days of receiving returned item
+
+6. Governing Law
+
+These terms follow Swedish law. Disputes will be resolved in Swedish courts.
+🍪 Cookie Policy
+
+Last updated: June 2025
+1. What Are Cookies?
+
+Cookies are small text files stored on your device to improve your experience.
+2. Types of Cookies
+
+    Essential – Security, shopping cart, session
+
+    Analytics – Google Analytics (user behavior)
+
+    Marketing – Social media sharing tools
+
+    Payment – Stripe integration
+
+3. Your Control
+
+You may:
+
+    Delete cookies
+
+    Block cookies per site
+
+    Configure your browser to ask first
+
+By using our site, you agree to our use of cookies.
