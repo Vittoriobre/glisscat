@@ -1,5 +1,7 @@
 // server.js
-require('dotenv').config();
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.error('ERROR: STRIPE_SECRET_KEY is not set. Please set it in your Vercel project environment variables.');
+}
 console.log('Stripe key:', process.env.STRIPE_SECRET_KEY);
 const express = require('express');
 const cors = require('cors');
@@ -26,9 +28,9 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Map your product IDs to Stripe price IDs
 const PRODUCT_PRICE_MAP = {
-  1: 'price_1RfV0FDfRnaFvmpAByGd7MhH', // Cat Scratcher - 429 kr
-  2: 'price_1RfV1LDfRnaFvmpAksIRqLoV', // Stone Diamond Bowl - 399 kr
-  3: 'price_1RfV0dDfRnaFvmpAB3im1OvA', // Premium Cat Bag - 699 kr
+  1: 'price_1RfUliDfRnaFvmpAk4NWnx01', // Cat Scratcher - 429 kr
+  2: 'price_1RfUlhDfRnaFvmpAvVrgYaEf', // Stone Diamond Bowl - 399 kr
+  3: 'price_1RfUlhDfRnaFvmpAHLwbXNNb', // Premium Cat Bag - 699 kr
   4: 'price_1RfV1kDfRnaFvmpAiUhxekEj', // Fountain (if needed) - 349 kr
 };
 
