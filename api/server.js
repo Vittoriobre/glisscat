@@ -1,17 +1,19 @@
-// server.js
+// api/server.js
 require('dotenv').config();
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  console.error('ERROR: STRIPE_SECRET_KEY is not set. Please set it in your Vercel project environment variables.');
-}
-console.log('Stripe key:', process.env.STRIPE_SECRET_KEY);
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const serverless = require('serverless-http');
 
 const app = express();
 
+// Optional: simple root route to avoid 500 on '/'
+app.get('/', (req, res) => {
+  res.send('Nuvepet API is running');
+});
+
+// CORS setup
 const allowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
@@ -23,9 +25,7 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function(origin, callback) {
-    // allow requests with no origin (like mobile apps, curl, etc.)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       return callback(null, true);
     } else {
       return callback(new Error('Not allowed by CORS'));
@@ -36,30 +36,27 @@ app.use(cors({
 
 app.use(express.json());
 
-// Map your product IDs to Stripe price IDs
+// Stripe price map
 const PRODUCT_PRICE_MAP = {
-  1: 'price_1RfUliDfRnaFvmpAk4NWnx01', // Cat Scratcher - 429 kr
-  2: 'price_1RfUlhDfRnaFvmpAvVrgYaEf', // Stone Diamond Bowl - 399 kr
-  3: 'price_1RfUlhDfRnaFvmpAHLwbXNNb', // Premium Cat Bag - 699 kr
-  4: 'price_1RfihbDfRnaFvmpAkgrhGifJ', // Fountain (if needed) - 349 kr
+  1: 'price_1RfUliDfRnaFvmpAk4NWnx01',
+  2: 'price_1RfUlhDfRnaFvmpAvVrgYaEf',
+  3: 'price_1RfUlhDfRnaFvmpAHLwbXNNb',
+  4: 'price_1RfihbDfRnaFvmpAkgrhGifJ',
 };
 
-// API Routes
+// Route: Create Checkout
 app.post('/create-checkout-session', async (req, res) => {
   try {
-    const { items } = req.body; // [{ id: 1, quantity: 2 }, ...]
+    const { items } = req.body;
     if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'No items provided' });
     }
 
-    console.log('Received items:', items);
-
-    // Calculate subtotal
     const productPrices = {
-      1: 429, // Cat Scratcher
-      2: 399, // Stone Diamond Bowl
-      3: 699, // Premium Cat Bag
-      4: 349, // Fountain
+      1: 429,
+      2: 399,
+      3: 699,
+      4: 349,
     };
 
     let subtotal = 0;
@@ -69,9 +66,6 @@ app.post('/create-checkout-session', async (req, res) => {
       }
     });
 
-    console.log('Calculated subtotal:', subtotal);
-
-    // Build Stripe line_items
     const line_items = items.map(item => ({
       price: PRODUCT_PRICE_MAP[item.id],
       quantity: item.quantity,
@@ -81,12 +75,11 @@ app.post('/create-checkout-session', async (req, res) => {
       return res.status(400).json({ error: 'No valid products' });
     }
 
-    // Set up shipping options based on order total
     const shippingOptions = subtotal < 500 ? [
       {
         shipping_rate_data: {
           type: 'fixed_amount',
-          fixed_amount: { amount: 4900, currency: 'sek' }, // 49 kr in öre
+          fixed_amount: { amount: 4900, currency: 'sek' },
           display_name: 'Standard Shipping',
           delivery_estimate: {
             minimum: { unit: 'business_day', value: 2 },
@@ -96,45 +89,30 @@ app.post('/create-checkout-session', async (req, res) => {
       }
     ] : [];
 
-    if (subtotal < 500) {
-      console.log('Adding shipping cost (49 kr) for order under 500 kr');
-    } else {
-      console.log('Order is 500 kr or above - free shipping');
-    }
+    const session = await stripe.checkout.sessions.create({
+      line_items,
+      mode: 'payment',
+      success_url: `${req.headers.origin}/success`,
+      cancel_url: `${req.headers.origin}/cancel`,
+      currency: 'sek',
+      shipping_options: shippingOptions,
+    });
 
-    console.log('Final line_items for Stripe:', JSON.stringify(line_items, null, 2));
-    console.log('Shipping options:', JSON.stringify(shippingOptions, null, 2));
-
-    try {
-      const session = await stripe.checkout.sessions.create({
-        line_items,
-        mode: 'payment',
-        success_url: `${req.headers.origin}/success`,
-        cancel_url: `${req.headers.origin}/cancel`,
-        currency: 'sek',
-        shipping_options: shippingOptions,
-      });
-      console.log('Stripe session created successfully');
-      res.json({ url: session.url });
-    } catch (stripeErr) {
-      console.error('Stripe error:', stripeErr);
-      res.status(500).json({ error: 'Stripe error', details: stripeErr.message });
-    }
+    res.json({ url: session.url });
   } catch (err) {
-    console.error('Error creating checkout session:', err);
+    console.error('Checkout session error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
+// Route: Donations
 app.post('/create-donation-session', async (req, res) => {
   try {
     const { amount, email, message } = req.body;
+
     if (!amount || isNaN(amount) || amount < 5) {
       return res.status(400).json({ error: 'Invalid donation amount' });
     }
-
-    // Stripe expects amount in öre (cents)
-    const amountInOres = Math.round(Number(amount) * 100);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -146,7 +124,7 @@ app.post('/create-donation-session', async (req, res) => {
               name: 'Nuvepet Donation',
               description: message ? `Message: ${message}` : undefined,
             },
-            unit_amount: amountInOres,
+            unit_amount: Math.round(Number(amount) * 100),
           },
           quantity: 1,
         },
@@ -159,10 +137,9 @@ app.post('/create-donation-session', async (req, res) => {
 
     res.json({ url: session.url });
   } catch (err) {
-    console.error('Error creating donation session:', err);
+    console.error('Donation session error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-const serverless = require('serverless-http');
-module.exports = serverless(app); 
+module.exports = serverless(app);
