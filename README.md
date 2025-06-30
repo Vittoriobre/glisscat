@@ -1,126 +1,161 @@
-# Nuvepet - Premium Pet Products Website
+# Glisscat - Nuvepet Pet Products E-commerce
 
-A modern e-commerce website for premium pet products, built with Node.js, Express, and Stripe for payments.
+A modern, honest, and Swedish/EU-compliant e-commerce website for premium pet products. Built with Node.js, Express, and Stripe for secure payments.
 
 ## Features
 
-- 🛍️ Product catalog with detailed modals
-- 💳 Stripe payment integration
-- 🛒 Shopping cart functionality
-- 💝 Donation system
-- 📱 Responsive design
-- 💬 Live chat widget (with online/offline status)
-- 📧 Contact form with EmailJS
-- ⚖️ Legal pages
+- **Modern UI/UX**: Clean, responsive design with Tailwind CSS
+- **Product Catalog**: Detailed product modals with image galleries
+- **Shopping Cart**: Persistent cart with local storage
+- **Secure Payments**: Stripe integration for safe transactions
+- **Legal Compliance**: Swedish/EU-compliant privacy policy and terms
+- **Mobile Responsive**: Optimized for all device sizes
+- **Live Chat**: Customer support widget
+- **Donation System**: Support the company's growth
+
+## Products
+
+- **Cat Scratcher** (429 kr) - Natural sisal fiber scratching ball
+- **Stone Diamond Bowl** (399 kr) - Elevated ceramic feeding bowl
+- **Premium Cat Bag** (699 kr) - Luxury transport carrier
+- **Fountain** (349 kr) - Automatic water dispenser (currently sold out)
 
 ## Tech Stack
 
-- **Backend**: Node.js, Express
-- **Frontend**: HTML, CSS (Tailwind), JavaScript
-- **Payments**: Stripe
+- **Frontend**: HTML5, CSS3, JavaScript, Tailwind CSS
+- **Backend**: Node.js, Express.js
+- **Payment**: Stripe Checkout
 - **Email**: EmailJS
-- **Deployment**: Vercel
+- **Deployment**: Vercel-ready configuration
 
-## Quick Deploy to Vercel
+## Setup Instructions
 
-### Option 1: Deploy with Vercel CLI
+### Prerequisites
 
-1. **Install Vercel CLI**:
+- Node.js (v14 or higher)
+- npm or yarn
+- Stripe account for payment processing
+
+### Installation
+
+1. **Clone the repository**
    ```bash
-   npm i -g vercel
+   git clone https://github.com/Vittoriobre/glisscat.git
+   cd glisscat
    ```
 
-2. **Login to Vercel**:
-   ```bash
-   vercel login
-   ```
-
-3. **Deploy**:
-   ```bash
-   vercel
-   ```
-
-### Option 2: Deploy via GitHub
-
-1. **Push your code to GitHub**
-2. **Go to [vercel.com](https://vercel.com)**
-3. **Import your GitHub repository**
-4. **Add environment variables** (see below)
-5. **Deploy!**
-
-## Environment Variables
-
-You need to set these environment variables in Vercel:
-
-### Required Variables:
-- `STRIPE_SECRET_KEY` - Your Stripe secret key
-- `NODE_ENV` - Set to "production"
-
-### Optional Variables:
-- `EMAILJS_PUBLIC_KEY` - For contact form emails
-- `EMAILJS_SERVICE_ID` - EmailJS service ID
-- `EMAILJS_TEMPLATE_ID` - EmailJS template ID
-
-## Setting Up Environment Variables in Vercel
-
-1. Go to your Vercel dashboard
-2. Select your project
-3. Go to "Settings" → "Environment Variables"
-4. Add each variable:
-   - `STRIPE_SECRET_KEY`: `sk_test_...` (your Stripe secret key)
-   - `NODE_ENV`: `production`
-
-## Local Development
-
-1. **Install dependencies**:
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-2. **Create `.env` file**:
-   ```env
-   STRIPE_SECRET_KEY=sk_test_your_key_here
+3. **Environment Configuration**
+   
+   Create a `.env` file in the root directory:
+   ```bash
+   # Stripe Configuration
+   STRIPE_SECRET_KEY=your_stripe_secret_key_here
+   
+   # Environment
    NODE_ENV=development
+   PORT=4242
    ```
 
-3. **Run the server**:
+   **Important**: Never commit your `.env` file to version control. It's already added to `.gitignore`.
+
+4. **Stripe Setup**
+   
+   - Create a Stripe account at [stripe.com](https://stripe.com)
+   - Get your secret key from the Stripe Dashboard
+   - Create products and prices in Stripe Dashboard
+   - Update the `PRODUCT_PRICE_MAP` in `server.js` with your Stripe price IDs
+
+5. **Run the application**
    ```bash
    npm start
    ```
 
-4. **Open**: http://localhost:4242
+   The application will be available at `http://localhost:4242`
+
+## Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `STRIPE_SECRET_KEY` | Your Stripe secret key | Yes |
+| `NODE_ENV` | Environment (development/production) | No |
+| `PORT` | Server port (default: 4242) | No |
 
 ## Project Structure
 
 ```
+glisscat/
 ├── frontend/
-│   ├── index.html          # Main website
+│   ├── index.html          # Main application
 │   └── legal.html          # Legal pages
 ├── images/                 # Product images
 ├── server.js              # Express server
 ├── package.json           # Dependencies
-├── vercel.json           # Vercel configuration
-└── README.md             # This file
+├── vercel.json           # Vercel deployment config
+├── .env                  # Environment variables (not in git)
+└── .gitignore           # Git ignore rules
 ```
 
-## Stripe Setup
+## Deployment
 
-1. Create a Stripe account at [stripe.com](https://stripe.com)
-2. Get your API keys from the dashboard
-3. Create products and prices in Stripe
-4. Update the `PRODUCT_PRICE_MAP` in `server.js` with your price IDs
+### Vercel (Recommended)
 
-## Custom Domain (Optional)
+1. Connect your GitHub repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
 
-1. In Vercel dashboard, go to "Settings" → "Domains"
-2. Add your custom domain
-3. Update CORS origins in `server.js`
-4. Configure DNS records as instructed by Vercel
+### Manual Deployment
 
-## Support
+1. Set `NODE_ENV=production` in your environment
+2. Update CORS origins in `server.js` for your domain
+3. Deploy to your preferred hosting platform
 
-For support, email: support@nuvepet.com
+## API Endpoints
+
+- `POST /create-checkout-session` - Create Stripe checkout session
+- `POST /create-donation-session` - Create donation checkout session
+- `GET /` - Serve main application
+- `GET /legal` - Serve legal pages
+
+## Security Features
+
+- Environment variables for sensitive data
+- CORS configuration
+- Input validation
+- Secure payment processing with Stripe
+- No sensitive data in client-side code
+
+## Legal Compliance
+
+The application includes:
+- Privacy Policy (GDPR compliant)
+- Terms of Service
+- Cookie Policy
+- Swedish/EU legal requirements
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
 ## License
 
-© 2025 Nuvepet Pet Products. All rights reserved. 
+This project is proprietary software. All rights reserved.
+
+## Support
+
+For support, contact:
+- Email: support@nuvepet.com
+- Phone: +46 73 646 30 45
+- Hours: Mon-Fri, 9am-5pm CET
+
+## About Nuvepet
+
+Nuvepet was founded in Sweden in 2025 by passionate pet lovers. We're dedicated to creating quality pet products and providing excellent customer experience. Your support helps us grow and develop new products for pets everywhere. 
