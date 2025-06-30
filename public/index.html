@@ -1,0 +1,2135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuvepet | Premium Pet Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        (function() {
+            // Initialize EmailJS with your public key
+            emailjs.init("obUrL6x01vZby33kn");
+        })();
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9CAF88',
+                        secondary: '#F5F5F5',
+                        accent: '#D4A373',
+                        dark: '#333333',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(156, 175, 136, 0.9) 0%, rgba(245, 245, 245, 0.9) 100%);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item-enter {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        .cart-item-enter-active {
+            opacity: 1;
+            transform: translateX(0);
+            transition: all 300ms ease-out;
+        }
+
+        .cart-item-exit {
+            opacity: 1;
+        }
+
+        .cart-item-exit-active {
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 300ms ease-out;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #9CAF88;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Mobile menu animation */
+        .mobile-menu-enter {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+
+        .mobile-menu-enter-active {
+            opacity: 1;
+            transform: translateX(0);
+            transition: all 300ms ease-out;
+        }
+
+        .mobile-menu-exit {
+            opacity: 1;
+        }
+
+        .mobile-menu-exit-active {
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 300ms ease-out;
+        }
+
+        /* FAQ section highlight animation */
+        .faq-highlight {
+            animation: faqPulse 2s ease-in-out;
+            border-radius: 8px;
+        }
+
+        @keyframes faqPulse {
+            0% {
+                background-color: rgba(156, 175, 136, 0.1);
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(156, 175, 136, 0.4);
+            }
+            50% {
+                background-color: rgba(156, 175, 136, 0.3);
+                transform: scale(1.01);
+                box-shadow: 0 0 20px 10px rgba(156, 175, 136, 0.2);
+            }
+            100% {
+                background-color: rgba(156, 175, 136, 0.1);
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(156, 175, 136, 0.4);
+            }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="../images/nuvepet-logo.png">
+</head>
+
+<body class="bg-secondary text-dark">
+    <!-- Promo Banner -->
+    <div class="bg-accent text-white text-center py-2 px-4">
+        <p class="text-sm font-medium">Free shipping on orders over 500 kr! 🚚</p>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="flex items-center">
+                <img src="../images/nuvepet-logo.png" alt="Nuvepet Logo" class="h-10 w-10 mr-2" style="object-fit:contain;">
+                <span class="text-2xl font-bold text-primary">Nuvepet</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#products" class="text-dark hover:text-primary font-medium px-4 py-2 rounded-lg transition duration-300 hover:bg-gray-100">Shop</a>
+                <a href="#about" class="text-dark hover:text-primary font-medium px-4 py-2 rounded-lg transition duration-300 hover:bg-gray-100">About</a>
+                <a href="#contact" class="text-dark hover:text-primary font-medium px-4 py-2 rounded-lg transition duration-300 hover:bg-gray-100">Contact</a>
+            </nav>
+
+            <!-- Cart and Mobile Menu Button -->
+            <div class="flex items-center space-x-4">
+                <button id="cart-toggle" class="relative p-3 rounded-lg hover:bg-gray-100 transition duration-300">
+                    <i class="fas fa-shopping-cart text-xl text-dark hover:text-primary"></i>
+                    <span id="cart-count"
+                        class="absolute -top-2 -right-2 bg-primary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+                <button id="mobile-menu-toggle" class="md:hidden text-dark hover:text-primary p-3 rounded-lg hover:bg-gray-100 transition duration-300">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu"
+        class="fixed inset-0 z-40 bg-white transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex justify-between items-center mb-8">
+                <span class="text-2xl font-bold text-primary">Nuvepet</span>
+                <button id="mobile-menu-close" class="text-dark hover:text-primary">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <nav class="flex flex-col space-y-6">
+                <a href="#products" class="text-dark hover:text-primary font-medium text-lg">Shop</a>
+                <a href="#about" class="text-dark hover:text-primary font-medium text-lg">About</a>
+                <a href="#contact" class="text-dark hover:text-primary font-medium text-lg">Contact</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 hero-gradient"></div>
+        <img src="../images/cathomescreen.jpg" alt="Happy cat with pet products"
+            class="absolute inset-0 w-full h-full object-cover object-center z-0">
+
+        <div class="container mx-auto px-4 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">Upgrade Your Pet's Routine</h1>
+            <p class="text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto">Premium products designed for comfort,
+                durability, and pet happiness.</p>
+            <a href="#products"
+                class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105">
+                Shop Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Trust Badges -->
+    <div class="bg-white py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+                <div class="flex items-center">
+                    <i class="fas fa-truck text-primary text-2xl mr-2"></i>
+                    <span class="text-sm font-medium">Free Shipping</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-undo text-primary text-2xl mr-2"></i>
+                    <span class="text-sm font-medium">30-Day Returns</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-smile text-primary text-2xl mr-2"></i>
+                    <span class="text-sm font-medium">30-Day Satisfaction Guarantee</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-box-open text-primary text-2xl mr-2"></i>
+                    <span class="text-sm font-medium">Replacement if Damaged on Arrival</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Products -->
+    <section id="products" class="py-16 bg-secondary">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Our Products</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Product 1 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300 cursor-pointer" onclick="openProductModal(1)">
+                    <div class="relative overflow-hidden">
+                        <img src="../images/CatScratcher.png" alt="Cat Scratcher"
+                            class="w-full h-64 object-cover hover:scale-105 transition duration-300">
+                        <div class="absolute top-2 right-2 bg-primary text-white text-xs font-bold px-2 py-1 rounded">
+                            Bestseller
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold mb-2">Cat Scratcher</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400 mr-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Durable, eco-friendly scratching ball that cats love! Made from natural sisal and recycled materials, this toy satisfies your cat's natural scratching instincts while protecting your furniture.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-primary">429 kr</span>
+                            <button onclick="event.stopPropagation(); addToCart(1)"
+                                class="bg-primary hover:bg-opacity-90 text-white text-sm font-bold py-2 px-4 rounded transition duration-300">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300 cursor-pointer" onclick="openProductModal(2)">
+                    <div class="relative overflow-hidden">
+                        <img src="../images/Bowl1.png" alt="Stone Diamond Bowl"
+                            class="w-full h-64 object-cover hover:scale-105 transition duration-300">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold mb-2">Stone Diamond Bowl</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400 mr-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Our Diamond Bowl is crafted from high-quality ceramic and comes in two variants: the Slow Food Diamond Bowl and the Regular Diamond Bowl. Its elevated design (10 cm tall) and wide base (15.4 cm) help protect your cat's spine and promote a comfortable eating posture.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-primary">399 kr</span>
+                            <button onclick="event.stopPropagation(); addToCart(2)"
+                                class="bg-primary hover:bg-opacity-90 text-white text-sm font-bold py-2 px-4 rounded transition duration-300">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300 cursor-pointer" onclick="openProductModal(3)">
+                    <div class="relative overflow-hidden">
+                        <img src="../images/Bag1.png" alt="Premium Cat Bag"
+                            class="w-full h-64 object-cover hover:scale-105 transition duration-300">
+                        <div class="absolute top-2 right-2 bg-primary text-white text-xs font-bold px-2 py-1 rounded">
+                            Premium
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold mb-2">Premium Cat Bag</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400 mr-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Luxurious premium cat bag designed for comfort and style. Perfect for transporting your feline friend safely and elegantly. Made from high-quality materials with excellent ventilation and security features.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-primary">699 kr</span>
+                            <button onclick="event.stopPropagation(); addToCart(3)"
+                                class="bg-primary hover:bg-opacity-90 text-white text-sm font-bold py-2 px-4 rounded transition duration-300">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300 relative">
+                    <div class="relative overflow-hidden">
+                        <img src="../images/fountain1.png" alt="Fountain (Sold Out)"
+                            class="w-full h-64 object-cover hover:scale-105 transition duration-300 opacity-50">
+                        <div class="absolute top-2 right-2 bg-primary text-white text-xs font-bold px-2 py-1 rounded">
+                            New
+                        </div>
+                        <!-- Sold Out Overlay -->
+                        <div class="absolute inset-0 bg-gray-800 bg-opacity-60 flex items-center justify-center">
+                            <div class="bg-white text-gray-800 px-4 py-2 rounded-lg font-bold text-lg">
+                                SOLD OUT
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold mb-2 text-gray-500">Fountain (Sold Out)</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400 mr-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Keep your cat hydrated with our innovative automatic water dispenser. Features anti-spill design, continuous water flow, and easy maintenance. Perfect for encouraging healthy drinking habits.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-gray-400">349 kr</span>
+                            <button onclick="event.stopPropagation(); showSoldOutMessage()"
+                                class="bg-gray-400 text-white text-sm font-bold py-2 px-4 rounded transition duration-300 cursor-not-allowed">
+                                Sold Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
+                    <img src="../images/funnycat.jpg" alt="Happy pets" class="w-full rounded-lg shadow-lg">
+                </div>
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl font-bold mb-6">Our Story</h2>
+                    <p class="text-gray-600 mb-4">
+                        Nuvepet was founded in Sweden in 2025 by a small team of passionate pet lovers. Our mission is simple: to make pets happy and to give our customers the best possible experience and support.
+                    </p>
+                    <p class="text-gray-600 mb-6">
+                        We're a young company, but we're truly dedicated to quality, honesty, and growing our range of products. Every order and every bit of support helps us get better and bring more joy to pets and their people. If you love what we do, your donation means the world to us and helps us keep improving!
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4">
+                                <i class="fas fa-paw text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">Real Pet Passion</h4>
+                                <p class="text-gray-600 text-sm">We're truly into this—our own pets inspire everything we do.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4">
+                                <i class="fas fa-smile text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">Customer Experience</h4>
+                                <p class="text-gray-600 text-sm">We strive to give you the best support and shopping experience possible.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4">
+                                <i class="fas fa-gift text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">Growing Together</h4>
+                                <p class="text-gray-600 text-sm">We're planning to expand with more products and even better quality—thanks for being part of our journey!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-16 bg-primary bg-opacity-10">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Happy Pets, Happy Owners</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" style="display:none;">
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        "The grooming gloves are a game-changer! My cat actually enjoys being brushed now, and my
+                        furniture is finally fur-free."
+                    </p>
+                    <div class="flex items-center">
+                        <img src="../images/IMG_6810.png" alt="Sarah J."
+                            class="w-10 h-10 rounded-full mr-3">
+                        <div>
+                            <h4 class="font-bold">Sarah J.</h4>
+                            <p class="text-gray-500 text-sm">Cat Mom</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        "The feeding mat has saved my floors from endless water spills. It's durable, easy to clean, and
+                        looks great in my kitchen."
+                    </p>
+                    <div class="flex items-center">
+                        <img src="../images/IMG_6811.png" alt="Michael T."
+                            class="w-10 h-10 rounded-full mr-3">
+                        <div>
+                            <h4 class="font-bold">Michael T.</h4>
+                            <p class="text-gray-500 text-sm">Dog Dad</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        "My cats are obsessed with the scratching ball. It's the only toy that's lasted more than a
+                        month with my destructive pair!"
+                    </p>
+                    <div class="flex items-center">
+                        <img src="../images/1.avif" alt="Emily R." class="w-10 h-10 rounded-full mr-3">
+                        <div>
+                            <h4 class="font-bold">Emily R.</h4>
+                            <p class="text-gray-500 text-sm">Multi-Cat Household</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Get In Touch</h2>
+
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/2">
+                    <h3 class="text-xl font-bold mb-4">Contact Information</h3>
+                    <p class="text-gray-600 mb-6">
+                        Have questions about our products or need help with an order? We're here to help!
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4">
+                                <i class="fas fa-envelope text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">Email Us</h4>
+                                <p class="text-gray-600">support@nuvepet.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4">
+                                <i class="fas fa-phone-alt text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">Call Us</h4>
+                                <p class="text-gray-600">+46 73 646 30 45</p>
+                                <p class="text-gray-500 text-sm">Mon-Fri, 9am-5pm CET</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <div class="flex space-x-4" style="display: none;">
+                            <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                                <i class="fab fa-pinterest"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:w-1/2">
+                    <h3 class="text-xl font-bold mb-4">Send Us a Message</h3>
+                    <form id="contact-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="contact-name" class="block text-sm font-medium mb-1">Name</label>
+                                <input type="text" id="contact-name" name="name" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            </div>
+                            <div>
+                                <label for="contact-email" class="block text-sm font-medium mb-1">Email</label>
+                                <input type="email" id="contact-email" name="email" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="contact-subject" class="block text-sm font-medium mb-1">Subject</label>
+                            <input type="text" id="contact-subject" name="subject" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="contact-message" class="block text-sm font-medium mb-1">Message</label>
+                            <textarea id="contact-message" name="message" rows="5" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                        </div>
+                        <button type="submit" id="contact-submit-btn"
+                            class="bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center">
+                            <span id="contact-btn-text">Send Message</span>
+                            <div id="contact-btn-loading" class="hidden ml-2">
+                                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                            </div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-16 bg-secondary">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+
+            <div class="max-w-3xl mx-auto space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-4 focus:outline-none">
+                        <h3 class="text-lg font-medium text-left">How long does shipping take?</h3>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-4 pb-4">
+                        <p class="text-gray-600">
+                            Most orders are delivered within 7-9 days. Some products may arrive in 1-3 days depending on your location. We are based in Sweden and ship from Europe.
+                        </p>
+                        <p class="text-gray-600 mt-2">
+                            <strong>Tracking your order:</strong> A tracking number will be emailed to you once your order has been shipped. You can use this number to track your package's journey to your doorstep.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-4 focus:outline-none">
+                        <h3 class="text-lg font-medium text-left">What is your return policy?</h3>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-4 pb-4">
+                        <p class="text-gray-600">
+                            We offer a 30-day return policy for unused products in their original packaging. Simply
+                            contact our customer service team to initiate a return. Return shipping is the customer's
+                            responsibility unless the item arrived damaged or defective.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-4 focus:outline-none">
+                        <h3 class="text-lg font-medium text-left">Are your products safe for all pets?</h3>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-4 pb-4">
+                        <p class="text-gray-600">
+                            All Nuvepet products are designed with pet safety in mind and made from non-toxic materials.
+                            However, we always recommend supervising your pet with any new product to ensure they're
+                            using it appropriately. Some products may have size recommendations - please check
+                            individual product descriptions.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-4 focus:outline-none">
+                        <h3 class="text-lg font-medium text-left">Do you offer wholesale pricing?</h3>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-4 pb-4">
+                        <p class="text-gray-600">
+                            Yes! We work with pet stores, groomers, and other retailers. Please contact our wholesale
+                            department at wholesale@nuvepet.com for more information about our wholesale program,
+                            pricing, and minimum order requirements.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-4 focus:outline-none">
+                        <h3 class="text-lg font-medium text-left">How do I clean and maintain my Nuvepet products?</h3>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-4 pb-4">
+                        <p class="text-gray-600">
+                            Care instructions vary by product. Most fabric items can be machine washed in cold water and
+                            air dried. Silicone and plastic products can be washed with warm soapy water. Always check
+                            the care label or product description for specific instructions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center justify-center mb-4">
+                        <img src="../images/nuvepet-logo.png" alt="Nuvepet Logo" class="h-8 w-8 mr-2" style="object-fit:contain;">
+                        <h3 class="text-xl font-bold">Nuvepet Pet Products</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Premium pet products designed with love and care for your furry friends.
+                    </p>
+                    <div class="flex space-x-4" style="display: none;">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#products" class="text-gray-400 hover:text-white transition duration-300">All Products</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4">Help</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#faq" class="text-gray-400 hover:text-white transition duration-300">FAQs</a></li>
+                        <li><a href="#faq" class="text-gray-400 hover:text-white transition duration-300">Shipping &
+                                Returns</a></li>
+                        <li><a href="#faq" class="text-gray-400 hover:text-white transition duration-300">Track Order</a>
+                        </li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition duration-300">Contact Us</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="legal.html#privacy-policy" class="text-gray-400 hover:text-white transition duration-300">Privacy
+                                Policy</a></li>
+                        <li><a href="legal.html#terms-of-service" class="text-gray-400 hover:text-white transition duration-300">Terms of
+                                Service</a></li>
+                        <li><a href="legal.html#cookie-policy" class="text-gray-400 hover:text-white transition duration-300">Cookie Policy</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                    &copy; 2025 Nuvepet Pet Products. All rights reserved.
+                </p>
+                <div class="flex items-center space-x-6">
+                    <!-- Subtle Donation Section -->
+                    <div class="flex items-center space-x-2">
+                        <span class="text-gray-400 text-xs">Support us:</span>
+                        <button onclick="openDonationModal()" class="text-gray-400 hover:text-primary text-xs transition duration-300">
+                            <i class="fas fa-heart mr-1"></i>Donate
+                        </button>
+                    </div>
+                    <div class="flex space-x-4">
+                        <img src="../images/visa.png" alt="Visa" class="h-8">
+                        <img src="../images/mastercard.png" alt="Mastercard" class="h-8" style="width:2.5rem; object-fit:contain;">
+                        <img src="../images/klarna.png" alt="Klarna" class="h-8">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="cart-sidebar"
+        class="fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Your Cart</h2>
+                <button id="cart-close" class="text-gray-500 hover:text-dark">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div id="cart-items" class="space-y-4">
+                <!-- Cart items will be dynamically inserted here -->
+                <div class="text-center py-8">
+                    <i class="fas fa-shopping-cart text-3xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">Your cart is empty</p>
+                </div>
+            </div>
+
+            <div id="cart-summary" class="border-t border-gray-200 mt-6 pt-6 hidden">
+                <div class="flex justify-between mb-2">
+                    <span class="text-gray-600">Subtotal</span>
+                    <span id="cart-subtotal" class="font-bold">0 kr</span>
+                </div>
+                <div class="flex justify-between mb-4">
+                    <span class="text-gray-600">Shipping</span>
+                    <span id="cart-shipping" class="font-bold text-primary">Free</span>
+                </div>
+                <div class="flex justify-between text-lg font-bold mb-6">
+                    <span>Total</span>
+                    <span id="cart-total">0 kr</span>
+                </div>
+                
+                <div id="shipping-note" class="text-xs text-gray-500 mb-4 text-center hidden">
+                    Add <span id="shipping-remaining"></span> more for free shipping!
+                </div>
+
+                <button id="checkout-btn"
+                    class="w-full bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                    Proceed to Checkout
+                </button>
+
+                <p class="text-center text-sm text-gray-500 mt-4">
+                    or <a href="#" class="text-primary hover:underline">continue shopping</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+    <!-- Loading Spinner (hidden by default) -->
+    <div id="loading-spinner" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Live Chat Button -->
+    <div class="fixed bottom-6 right-6 z-40">
+        <button id="chat-toggle"
+            class="bg-primary hover:bg-opacity-90 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition duration-300 transform hover:scale-110">
+            <i class="fas fa-comment-dots text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Live Chat Widget -->
+    <div id="chat-widget"
+        class="fixed bottom-24 right-6 w-80 bg-white rounded-lg shadow-xl transform translate-y-4 opacity-0 transition-all duration-300 ease-in-out z-40 hidden">
+        <div class="bg-primary text-white rounded-t-lg p-4 flex justify-between items-center">
+            <h3 class="font-bold">Chat with Us</h3>
+            <button id="chat-close" class="text-white hover:text-gray-200">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-4">
+            <div id="chat-status-message" class="bg-gray-100 rounded-lg p-3 mb-4">
+                <!-- Status message will be set by JS -->
+            </div>
+
+            <form class="space-y-3">
+                <div>
+                    <input type="text" placeholder="Your name"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+                </div>
+                <div>
+                    <input type="email" placeholder="Your email"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+                </div>
+                <div>
+                    <textarea placeholder="How can we help?" rows="3"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"></textarea>
+                </div>
+                <button type="submit"
+                    class="w-full bg-primary hover:bg-opacity-90 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300">
+                    Send Message
+                </button>
+            </form>
+
+            <p class="text-xs text-gray-500 mt-3" id="chat-support-hours">
+                <!-- Support hours note will be set by JS -->
+            </p>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <!-- Modal Header -->
+                <div class="flex justify-between items-start mb-6">
+                    <h2 id="modal-product-name" class="text-2xl font-bold text-dark"></h2>
+                    <button id="modal-close" class="text-gray-500 hover:text-dark text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Product Images -->
+                    <div class="space-y-4">
+                        <div class="relative">
+                            <img id="modal-main-image" src="" alt="" class="w-full h-96 object-cover rounded-lg">
+                            <!-- Navigation Arrows -->
+                            <button id="prev-image" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-dark p-2 rounded-full shadow-lg transition duration-300">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button id="next-image" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-dark p-2 rounded-full shadow-lg transition duration-300">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <!-- Image Counter -->
+                            <div id="image-counter" class="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                                1 / 1
+                            </div>
+                        </div>
+                        <!-- Thumbnail Navigation -->
+                        <div id="image-thumbnails" class="flex space-x-2 overflow-x-auto">
+                            <!-- Thumbnails will be dynamically inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="space-y-6">
+                        <!-- Price and Rating -->
+                        <div class="flex items-center justify-between">
+                            <span id="modal-product-price" class="text-3xl font-bold text-primary"></span>
+                            <div class="flex items-center">
+                                <div class="flex text-yellow-400 mr-2">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div>
+                            <h3 class="font-bold text-lg mb-2">Description</h3>
+                            <p id="modal-product-description" class="text-gray-600 leading-relaxed"></p>
+                        </div>
+
+                        <!-- Specifications -->
+                        <div>
+                            <h3 class="font-bold text-lg mb-2">Specifications</h3>
+                            <div id="modal-product-specs" class="space-y-2">
+                                <!-- Specifications will be dynamically inserted here -->
+                            </div>
+                        </div>
+
+                        <!-- Features -->
+                        <div>
+                            <h3 class="font-bold text-lg mb-2">Key Features</h3>
+                            <ul id="modal-product-features" class="space-y-2">
+                                <!-- Features will be dynamically inserted here -->
+                            </ul>
+                        </div>
+
+                        <!-- Quantity and Add to Cart -->
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <label class="font-medium">Quantity:</label>
+                                <div class="flex items-center border border-gray-300 rounded-lg">
+                                    <button id="decrease-quantity" class="px-3 py-2 hover:bg-gray-100">
+                                        <i class="fas fa-minus text-xs"></i>
+                                    </button>
+                                    <span id="modal-quantity" class="px-4 py-2 border-x border-gray-300">1</span>
+                                    <button id="increase-quantity" class="px-3 py-2 hover:bg-gray-100">
+                                        <i class="fas fa-plus text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button id="modal-add-to-cart" class="w-full bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center">
+                                <i class="fas fa-shopping-cart mr-2"></i>
+                                Add to Cart
+                            </button>
+                        </div>
+
+                        <!-- Additional Info -->
+                        <div class="border-t border-gray-200 pt-4">
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div class="flex items-center">
+                                    <i class="fas fa-truck text-primary mr-2"></i>
+                                    <span>Free shipping</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-undo text-primary mr-2"></i>
+                                    <span>30-day returns</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-smile text-primary mr-2"></i>
+                                    <span>30-day satisfaction guarantee</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-box-open text-primary mr-2"></i>
+                                    <span>Replacement if damaged on arrival</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donation Modal -->
+    <div id="donation-modal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-md w-full">
+            <div class="p-6">
+                <!-- Modal Header -->
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-dark">Support Nuvepet</h2>
+                        <p class="text-gray-600 mt-1">Help us continue creating amazing pet products</p>
+                    </div>
+                    <button id="donation-close" class="text-gray-500 hover:text-dark text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <!-- Donation Content -->
+                <div class="space-y-6">
+                    <div class="text-center">
+                        <div class="bg-primary bg-opacity-10 p-4 rounded-lg mb-4">
+                            <i class="fas fa-heart text-primary text-3xl mb-2"></i>
+                            <p class="text-gray-700">Your support helps us develop new products and improve existing ones for pets everywhere.</p>
+                        </div>
+                    </div>
+
+                    <!-- Donation Amounts -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Choose an amount:</label>
+                        <div class="grid grid-cols-3 gap-3 mb-4">
+                            <button class="donation-amount bg-gray-100 hover:bg-primary hover:text-white text-gray-700 font-medium py-3 px-4 rounded-lg transition duration-300" data-amount="50">
+                                50 kr
+                            </button>
+                            <button class="donation-amount bg-gray-100 hover:bg-primary hover:text-white text-gray-700 font-medium py-3 px-4 rounded-lg transition duration-300" data-amount="100">
+                                100 kr
+                            </button>
+                            <button class="donation-amount bg-gray-100 hover:bg-primary hover:text-white text-gray-700 font-medium py-3 px-4 rounded-lg transition duration-300" data-amount="250">
+                                250 kr
+                            </button>
+                        </div>
+                        
+                        <!-- Custom Amount -->
+                        <div class="mb-4">
+                            <label for="custom-amount" class="block text-sm font-medium text-gray-700 mb-2">Or enter a custom amount:</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">kr</span>
+                                <input type="number" id="custom-amount" min="1" step="1" placeholder="0"
+                                    class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Message -->
+                    <div>
+                        <label for="donation-message" class="block text-sm font-medium text-gray-700 mb-2">Leave us a message (optional):</label>
+                        <textarea id="donation-message" rows="3" placeholder="Tell us what you love about our products..."
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                    </div>
+
+                    <!-- Donation Button -->
+                    <button id="donate-btn" class="w-full bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center">
+                        <i class="fas fa-heart mr-2"></i>
+                        Support Nuvepet
+                    </button>
+
+                    <p class="text-xs text-gray-500 text-center">
+                        All donations go directly towards product development and improving our services.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Product data
+        const products = {
+            1: {
+                id: 1,
+                name: "Cat Scratcher",
+                price: 429,
+                image: "../images/CatScratcher.png",
+                images: [
+                    "../images/CatScratcher.png",
+                    "../images/Catscratcher2.png",
+                    "../images/CatScratcher3.png",
+                    "../images/CatScratcher4.png",
+                    "../images/Catscratcher5.jpeg"
+                ],
+                description: "Durable, eco-friendly scratching ball that cats love! Made from natural sisal and recycled materials, this toy satisfies your cat's natural scratching instincts while protecting your furniture.",
+                rating: "4.2 (89 reviews)",
+                specifications: {
+                    "Material": "Natural sisal fiber, recycled cardboard",
+                    "Diameter": "6\" (15cm)",
+                    "Weight": "0.5 kg",
+                    "Age Range": "3+ months",
+                    "Safety": "Non-toxic, no small parts",
+                    "Durability": "Long-lasting construction"
+                },
+                features: [
+                    "Natural sisal fiber for authentic scratching feel",
+                    "Eco-friendly recycled materials",
+                    "Rolls and bounces for interactive play",
+                    "Satisfies natural scratching instincts",
+                    "Helps protect furniture from damage",
+                    "Suitable for all cat ages and sizes"
+                ],
+                stripePaymentLink: "https://buy.stripe.com/test_00w14pdtrdUZfzNaB9fIs03"
+            },
+            2: {
+                id: 2,
+                name: "Stone Diamond Bowl",
+                price: 399,
+                image: "../images/Bowl1.png",
+                images: [
+                    "../images/Bowl1.png",
+                    "../images/bowl2.png",
+                    "../images/bowl3.png",
+                    "../images/bowl4.png",
+                    "../images/bowl5.png",
+                    "../images/bowl6.png"
+                ],
+                description: "Our Diamond Bowl is crafted from high-quality ceramic and comes in two variants: the Slow Food Diamond Bowl and the Regular Diamond Bowl. Its elevated design (10 cm tall) and wide base (15.4 cm) help protect your cat's spine and promote a comfortable eating posture.",
+                rating: "4.8 (112 reviews)",
+                specifications: {
+                    "Material": "Ceramic",
+                    "Variants": "Slow Food Diamond Bowl, Regular Diamond Bowl",
+                    "Height": "10 cm",
+                    "Width": "15.4 cm",
+                    "Colors": "White"
+                },
+                features: [
+                    "Protects your cat's spine with ergonomic height",
+                    "Available as Slow Food or Regular Diamond Bowl",
+                    "Premium ceramic construction",
+                    "Wide and stable base",
+                    "Easy to clean and dishwasher safe"
+                ],
+                stripePaymentLink: "https://buy.stripe.com/test_9B66oJgFD7wBfzN8t1fIs05"
+            },
+            3: {
+                id: 3,
+                name: "Premium Cat Bag",
+                price: 699,
+                image: "../images/Bag1.png",
+                images: [
+                    "../images/Bag1.png",
+                    "../images/Bag2.png",
+                    "../images/bag3.png",
+                    "../images/bag4.png",
+                    "../images/bag5.png",
+                    "../images/bag6.png"
+                ],
+                description: "Luxurious premium cat bag designed for comfort and style. Perfect for transporting your feline friend safely and elegantly. Made from high-quality materials with excellent ventilation and security features.",
+                rating: "4.7 (156 reviews)",
+                specifications: {
+                    "Material": "Premium canvas, reinforced stitching",
+                    "Size": "40cm x 30cm x 20cm",
+                    "Weight Capacity": "Up to 8 kg",
+                    "Ventilation": "Multiple mesh panels for airflow",
+                    "Security": "Reinforced zipper and safety clips",
+                    "Colors": "Black, Gray, Navy Blue"
+                },
+                features: [
+                    "Premium canvas construction for durability",
+                    "Multiple ventilation panels for comfort",
+                    "Reinforced zipper and safety features",
+                    "Comfortable shoulder strap included",
+                    "Easy to clean and maintain",
+                    "Perfect for vet visits and travel"
+                ],
+                stripePaymentLink: "https://buy.stripe.com/test_fZucN760Z5otcnB10zfIs04"
+            },
+            4: {
+                id: 4,
+                name: "Fountain (Sold Out)",
+                price: 349,
+                image: "../images/fountain1.png",
+                images: [
+                    "../images/fountain1.png",
+                    "../images/fountain2.png",
+                    "../images/fountain3.png",
+                    "../images/fountain4.png",
+                    "../images/fountain5.png",
+                    "../images/fountainfilter.png"
+                ],
+                description: "Keep your cat hydrated with our innovative automatic water dispenser. Features anti-spill design, continuous water flow, and easy maintenance. Perfect for encouraging healthy drinking habits.",
+                rating: "4.8 (56 reviews)",
+                specifications: {
+                    "Capacity": "2.5L",
+                    "Power": "USB powered, low voltage",
+                    "Material": "Food-grade plastic, stainless steel",
+                    "Noise Level": "< 30dB (whisper quiet)",
+                    "Filter Life": "2-4 weeks",
+                    "Dimensions": "20cm x 20cm x 15cm"
+                },
+                features: [
+                    "Continuous water circulation keeps water fresh",
+                    "Anti-spill design prevents messes",
+                    "Built-in filter removes impurities",
+                    "Whisper-quiet operation",
+                    "Easy to clean and maintain",
+                    "LED indicator for water level"
+                ]
+            }
+        };
+
+        // Cart functionality
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // DOM elements
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartToggle = document.getElementById('cart-toggle');
+        const cartClose = document.getElementById('cart-close');
+        const overlay = document.getElementById('overlay');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartSummary = document.getElementById('cart-summary');
+        const cartSubtotal = document.getElementById('cart-subtotal');
+        const cartTotal = document.getElementById('cart-total');
+        const cartCount = document.getElementById('cart-count');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        const chatToggle = document.getElementById('chat-toggle');
+        const chatWidget = document.getElementById('chat-widget');
+        const chatClose = document.getElementById('chat-close');
+        const faqToggles = document.querySelectorAll('.faq-toggle');
+        const loadingSpinner = document.getElementById('loading-spinner');
+
+        // Product modal elements
+        const productModal = document.getElementById('product-modal');
+        const modalClose = document.getElementById('modal-close');
+        const modalProductName = document.getElementById('modal-product-name');
+        const modalProductPrice = document.getElementById('modal-product-price');
+        const modalProductDescription = document.getElementById('modal-product-description');
+        const modalProductSpecs = document.getElementById('modal-product-specs');
+        const modalProductFeatures = document.getElementById('modal-product-features');
+        const modalMainImage = document.getElementById('modal-main-image');
+        const imageThumbnails = document.getElementById('image-thumbnails');
+        const imageCounter = document.getElementById('image-counter');
+        const prevImage = document.getElementById('prev-image');
+        const nextImage = document.getElementById('next-image');
+        const modalQuantity = document.getElementById('modal-quantity');
+        const decreaseQuantity = document.getElementById('decrease-quantity');
+        const increaseQuantity = document.getElementById('increase-quantity');
+        const modalAddToCart = document.getElementById('modal-add-to-cart');
+
+        // Donation modal elements
+        const donationModal = document.getElementById('donation-modal');
+        const donationClose = document.getElementById('donation-close');
+        const donationAmounts = document.querySelectorAll('.donation-amount');
+        const customAmount = document.getElementById('custom-amount');
+        const donationMessage = document.getElementById('donation-message');
+        const donateBtn = document.getElementById('donate-btn');
+
+        // Modal state
+        let currentProduct = null;
+        let currentImageIndex = 0;
+        let selectedDonationAmount = 0;
+
+        // Initialize cart count
+        updateCartCount();
+
+        // Product Modal Functions
+        function openProductModal(productId) {
+            currentProduct = products[productId];
+            currentImageIndex = 0;
+            
+            // Check if product is sold out (product 4 - fountain)
+            const isSoldOut = productId === 4;
+            
+            // Populate modal content
+            modalProductName.textContent = currentProduct.name;
+            modalProductPrice.textContent = `${currentProduct.price} kr`;
+            modalProductDescription.textContent = currentProduct.description;
+            
+            // Add sold out notice to description if sold out (only for fountain)
+            if (isSoldOut) {
+                modalProductDescription.innerHTML += '<br><br><span class="text-red-600 font-bold">⚠️ This product is currently sold out. Check back soon for restocking!</span>';
+            }
+            
+            // Populate specifications
+            let specsHTML = '';
+            for (const [key, value] of Object.entries(currentProduct.specifications)) {
+                specsHTML += `
+                    <div class="flex justify-between py-2 border-b border-gray-100">
+                        <span class="font-medium text-gray-700">${key}:</span>
+                        <span class="text-gray-600">${value}</span>
+                    </div>
+                `;
+            }
+            modalProductSpecs.innerHTML = specsHTML;
+            
+            // Populate features
+            let featuresHTML = '';
+            currentProduct.features.forEach(feature => {
+                featuresHTML += `
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-primary mt-1 mr-2"></i>
+                        <span class="text-gray-600">${feature}</span>
+                    </li>
+                `;
+            });
+            modalProductFeatures.innerHTML = featuresHTML;
+            
+            // Set initial image
+            updateModalImage();
+            
+            // Reset quantity
+            modalQuantity.textContent = '1';
+            
+            // Update add to cart button based on availability
+            if (isSoldOut) {
+                modalAddToCart.textContent = 'Sold Out';
+                modalAddToCart.className = 'w-full bg-gray-400 text-white font-bold py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center cursor-not-allowed';
+                modalAddToCart.disabled = true;
+                // Disable quantity controls
+                decreaseQuantity.disabled = true;
+                increaseQuantity.disabled = true;
+                decreaseQuantity.className = 'px-3 py-2 hover:bg-gray-100 cursor-not-allowed opacity-50';
+                increaseQuantity.className = 'px-3 py-2 hover:bg-gray-100 cursor-not-allowed opacity-50';
+            } else {
+                modalAddToCart.innerHTML = '<i class="fas fa-shopping-cart mr-2"></i>Add to Cart';
+                modalAddToCart.className = 'w-full bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center';
+                modalAddToCart.disabled = false;
+                
+                // Enable quantity controls
+                decreaseQuantity.disabled = false;
+                increaseQuantity.disabled = false;
+                decreaseQuantity.className = 'px-3 py-2 hover:bg-gray-100';
+                increaseQuantity.className = 'px-3 py-2 hover:bg-gray-100';
+            }
+            
+            // Show modal
+            productModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProductModal() {
+            productModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            currentProduct = null;
+            currentImageIndex = 0;
+        }
+
+        function updateModalImage() {
+            if (!currentProduct) return;
+            
+            const images = currentProduct.images;
+            modalMainImage.src = images[currentImageIndex];
+            modalMainImage.alt = currentProduct.name;
+            
+            // Update image counter
+            imageCounter.textContent = `${currentImageIndex + 1} / ${images.length}`;
+            
+            // Update thumbnails
+            let thumbnailsHTML = '';
+            images.forEach((image, index) => {
+                const isActive = index === currentImageIndex;
+                thumbnailsHTML += `
+                    <img src="${image}" alt="${currentProduct.name}" 
+                         class="w-16 h-16 object-cover rounded-lg cursor-pointer transition duration-300 ${isActive ? 'ring-2 ring-primary' : 'hover:opacity-80'}"
+                         onclick="setModalImage(${index})">
+                `;
+            });
+            imageThumbnails.innerHTML = thumbnailsHTML;
+            
+            // Update navigation buttons
+            prevImage.style.display = currentImageIndex === 0 ? 'none' : 'block';
+            nextImage.style.display = currentImageIndex === images.length - 1 ? 'none' : 'block';
+        }
+
+        function setModalImage(index) {
+            currentImageIndex = index;
+            updateModalImage();
+        }
+
+        function nextModalImage() {
+            if (currentProduct && currentImageIndex < currentProduct.images.length - 1) {
+                currentImageIndex++;
+                updateModalImage();
+            }
+        }
+
+        function prevModalImage() {
+            if (currentProduct && currentImageIndex > 0) {
+                currentImageIndex--;
+                updateModalImage();
+            }
+        }
+
+        // Modal event listeners
+        modalClose.addEventListener('click', closeProductModal);
+        productModal.addEventListener('click', (e) => {
+            if (e.target === productModal) {
+                closeProductModal();
+            }
+        });
+
+        prevImage.addEventListener('click', prevModalImage);
+        nextImage.addEventListener('click', nextModalImage);
+
+        // Modal quantity controls
+        decreaseQuantity.addEventListener('click', () => {
+            const currentQty = parseInt(modalQuantity.textContent);
+            if (currentQty > 1) {
+                modalQuantity.textContent = currentQty - 1;
+            }
+        });
+
+        increaseQuantity.addEventListener('click', () => {
+            const currentQty = parseInt(modalQuantity.textContent);
+            modalQuantity.textContent = currentQty + 1;
+        });
+
+        // Modal add to cart
+        modalAddToCart.addEventListener('click', () => {
+            if (!currentProduct) return;
+            
+            // Check if product is sold out
+            if (currentProduct.id === 4) {
+                showSoldOutMessage();
+                return;
+            }
+            
+            const quantity = parseInt(modalQuantity.textContent);
+            const existingItem = cart.find(item => item.id === currentProduct.id);
+
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: currentProduct.id,
+                    name: currentProduct.name,
+                    price: currentProduct.price,
+                    image: currentProduct.image,
+                    quantity: quantity
+                });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+
+            // If cart is open, update the display
+            if (!cartSidebar.classList.contains('translate-x-full')) {
+                renderCartItems();
+            }
+
+            // Show success notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-lg shadow-lg flex items-center z-50';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle mr-2"></i>
+                <span>Added ${quantity} ${quantity === 1 ? 'item' : 'items'} to cart!</span>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 2000);
+
+            // Close modal
+            closeProductModal();
+        });
+
+        // Keyboard navigation for modal
+        document.addEventListener('keydown', (e) => {
+            if (productModal.classList.contains('hidden')) return;
+            
+            switch(e.key) {
+                case 'Escape':
+                    closeProductModal();
+                    break;
+                case 'ArrowLeft':
+                    prevModalImage();
+                    break;
+                case 'ArrowRight':
+                    nextModalImage();
+                    break;
+            }
+        });
+
+        // Toggle cart sidebar
+        cartToggle.addEventListener('click', () => {
+            cartSidebar.classList.remove('translate-x-full');
+            overlay.classList.remove('hidden');
+            renderCartItems();
+        });
+
+        cartClose.addEventListener('click', () => {
+            cartSidebar.classList.add('translate-x-full');
+            overlay.classList.add('hidden');
+        });
+
+        overlay.addEventListener('click', () => {
+            cartSidebar.classList.add('translate-x-full');
+            overlay.classList.add('hidden');
+            mobileMenu.classList.add('translate-x-full');
+        });
+
+        // Toggle mobile menu
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.remove('translate-x-full');
+            overlay.classList.remove('hidden');
+        });
+
+        mobileMenuClose.addEventListener('click', () => {
+            mobileMenu.classList.add('translate-x-full');
+            overlay.classList.add('hidden');
+        });
+
+        // Toggle chat widget
+        chatToggle.addEventListener('click', () => {
+            if (chatWidget.classList.contains('hidden')) {
+                chatWidget.classList.remove('hidden');
+                setTimeout(() => {
+                    chatWidget.classList.remove('translate-y-4');
+                    chatWidget.classList.remove('opacity-0');
+                }, 10);
+            } else {
+                chatWidget.classList.add('translate-y-4');
+                chatWidget.classList.add('opacity-0');
+                setTimeout(() => {
+                    chatWidget.classList.add('hidden');
+                }, 300);
+            }
+        });
+
+        chatClose.addEventListener('click', () => {
+            chatWidget.classList.add('translate-y-4');
+            chatWidget.classList.add('opacity-0');
+            setTimeout(() => {
+                chatWidget.classList.add('hidden');
+            }, 300);
+        });
+
+        // FAQ toggle functionality
+        faqToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const content = toggle.nextElementSibling;
+                const icon = toggle.querySelector('i');
+
+                if (content.classList.contains('hidden')) {
+                    content.classList.remove('hidden');
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                } else {
+                    content.classList.add('hidden');
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            });
+        });
+
+        // Add to cart function
+        function addToCart(productId) {
+            // Check if product is sold out
+            if (productId === 4) {
+                showSoldOutMessage();
+                return;
+            }
+
+            showLoading();
+
+            // Simulate loading delay
+            setTimeout(() => {
+                const product = products[productId];
+                const existingItem = cart.find(item => item.id === productId);
+
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.image,
+                        quantity: 1
+                    });
+                }
+
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+
+                // If cart is open, update the display
+                if (!cartSidebar.classList.contains('translate-x-full')) {
+                    renderCartItems();
+                }
+
+                hideLoading();
+
+                // Show added to cart notification
+                const notification = document.createElement('div');
+                notification.className = 'fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-lg shadow-lg flex items-center';
+                notification.innerHTML = `
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <span>Added to cart!</span>
+                `;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.classList.add('opacity-0', 'translate-y-2');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 2000);
+            }, 500);
+        }
+
+        // Buy now function - redirects to Stripe payment
+        function buyNow(productId) {
+            const product = products[productId];
+            
+            if (productId === 4) {
+                showSoldOutMessage();
+                return;
+            }
+
+            if (product.stripePaymentLink) {
+                // Redirect to Stripe payment link
+                window.open(product.stripePaymentLink, '_blank');
+            } else {
+                // Fallback to cart for products without direct payment
+                addToCart(productId);
+                // Open cart sidebar
+                cartSidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                renderCartItems();
+            }
+        }
+
+        // Update cart count in header
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = count;
+        }
+
+        // Render cart items
+        function renderCartItems() {
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="text-center py-8">
+                        <i class="fas fa-shopping-cart text-3xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500">Your cart is empty</p>
+                    </div>
+                `;
+                cartSummary.classList.add('hidden');
+                return;
+            }
+
+            cartSummary.classList.remove('hidden');
+
+            let itemsHTML = '';
+            let subtotal = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                itemsHTML += `
+                    <div class="cart-item flex items-start py-4 border-b border-gray-100">
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg mr-4">
+                        <div class="flex-grow">
+                            <h4 class="font-medium">${item.name}</h4>
+                            <p class="text-sm text-gray-500">${item.price} kr</p>
+                            <div class="flex items-center mt-2">
+                                <button onclick="updateQuantity(${item.id}, ${item.quantity - 1})" class="text-gray-500 hover:text-primary w-6 h-6 flex items-center justify-center border border-gray-300 rounded-l">
+                                    <i class="fas fa-minus text-xs"></i>
+                                </button>
+                                <span class="w-8 text-center border-t border-b border-gray-300 h-6 flex items-center justify-center">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, ${item.quantity + 1})" class="text-gray-500 hover:text-primary w-6 h-6 flex items-center justify-center border border-gray-300 rounded-r">
+                                    <i class="fas fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="font-medium">${itemTotal} kr</p>
+                            <button onclick="removeFromCart(${item.id})" class="text-gray-400 hover:text-red-500 mt-2">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            cartItemsContainer.innerHTML = itemsHTML;
+            cartSubtotal.textContent = `${subtotal} kr`;
+            
+            // Calculate shipping
+            const shipping = subtotal >= 500 ? 0 : 49;
+            const total = subtotal + shipping;
+            
+            // Update shipping display
+            const shippingElement = document.getElementById('cart-shipping');
+            if (shippingElement) {
+                if (subtotal >= 500) {
+                    shippingElement.textContent = 'Free';
+                } else {
+                    shippingElement.textContent = '49 kr';
+                }
+            }
+            
+            // Show/hide shipping note
+            const shippingNote = document.getElementById('shipping-note');
+            const shippingRemaining = document.getElementById('shipping-remaining');
+            if (shippingNote && shippingRemaining) {
+                if (subtotal < 500 && subtotal > 0) {
+                    const remaining = 500 - subtotal;
+                    shippingRemaining.textContent = `${remaining} kr`;
+                    shippingNote.classList.remove('hidden');
+                } else {
+                    shippingNote.classList.add('hidden');
+                }
+            }
+            
+            cartTotal.textContent = `${total} kr`;
+        }
+
+        // Update quantity
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity < 1) {
+                removeFromCart(productId);
+                return;
+            }
+
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = newQuantity;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                renderCartItems();
+            }
+        }
+
+        // Remove from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCartItems();
+        }
+
+        // Checkout button
+        document.getElementById('checkout-btn').addEventListener('click', () => {
+            console.log('Checkout button clicked!');
+            console.log('Current cart:', cart);
+            if (cart.length === 0) {
+                console.log('Cart is empty, returning');
+                return;
+            }
+            // Prepare cart for backend: [{id, quantity}, ...]
+            const items = cart.map(item => ({ id: item.id, quantity: item.quantity }));
+            console.log('Sending items to checkout:', items);
+            checkoutCart(items);
+        });
+
+        // Loading functions
+        function showLoading() {
+            loadingSpinner.classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            loadingSpinner.classList.add('hidden');
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+
+                    // Add highlight animation for FAQ section
+                    if (targetId === '#faq') {
+                        targetElement.classList.add('faq-highlight');
+                        setTimeout(() => {
+                            targetElement.classList.remove('faq-highlight');
+                        }, 2000);
+                        
+                        // Check if this is the Track Order link and open the shipping FAQ
+                        if (this.textContent.trim().includes('Track Order')) {
+                            setTimeout(() => {
+                                const shippingFaq = document.querySelector('.faq-toggle');
+                                if (shippingFaq) {
+                                    const content = shippingFaq.nextElementSibling;
+                                    const icon = shippingFaq.querySelector('i');
+                                    
+                                    // Open the FAQ if it's closed
+                                    if (content.classList.contains('hidden')) {
+                                        content.classList.remove('hidden');
+                                        icon.classList.remove('fa-chevron-down');
+                                        icon.classList.add('fa-chevron-up');
+                                    }
+                                }
+                            }, 500); // Small delay to ensure scroll is complete
+                        }
+                        
+                        // Check if this is the Shipping & Returns link and open both shipping and return FAQs
+                        if (this.textContent.trim().includes('Shipping') && this.textContent.trim().includes('Returns')) {
+                            setTimeout(() => {
+                                const allFaqs = document.querySelectorAll('.faq-toggle');
+                                console.log('Found FAQs:', allFaqs.length); // Debug
+                                if (allFaqs.length >= 2) {
+                                    // Open first FAQ (shipping)
+                                    const shippingFaq = allFaqs[0];
+                                    const shippingContent = shippingFaq.nextElementSibling;
+                                    const shippingIcon = shippingFaq.querySelector('i');
+                                    
+                                    console.log('Opening shipping FAQ'); // Debug
+                                    if (shippingContent.classList.contains('hidden')) {
+                                        shippingContent.classList.remove('hidden');
+                                        shippingIcon.classList.remove('fa-chevron-down');
+                                        shippingIcon.classList.add('fa-chevron-up');
+                                    }
+                                    
+                                    // Open second FAQ (return policy)
+                                    const returnFaq = allFaqs[1];
+                                    const returnContent = returnFaq.nextElementSibling;
+                                    const returnIcon = returnFaq.querySelector('i');
+                                    
+                                    console.log('Opening return FAQ'); // Debug
+                                    if (returnContent.classList.contains('hidden')) {
+                                        returnContent.classList.remove('hidden');
+                                        returnIcon.classList.remove('fa-chevron-down');
+                                        returnIcon.classList.add('fa-chevron-up');
+                                    }
+                                }
+                            }, 500); // Small delay to ensure scroll is complete
+                        }
+                    }
+
+                    // Close mobile menu if open
+                    if (!mobileMenu.classList.contains('translate-x-full')) {
+                        mobileMenu.classList.add('translate-x-full');
+                        overlay.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // Show sold out message
+        function showSoldOutMessage() {
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center z-50';
+            notification.innerHTML = `
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span>This product is currently sold out. Check back soon!</span>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Donation Modal Functions
+        function openDonationModal() {
+            donationModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            resetDonationForm();
+        }
+
+        function closeDonationModal() {
+            donationModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            resetDonationForm();
+        }
+
+        function resetDonationForm() {
+            selectedDonationAmount = 0;
+            customAmount.value = '';
+            donationMessage.value = '';
+            
+            // Reset amount buttons
+            donationAmounts.forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+        }
+
+        function selectDonationAmount(amount) {
+            selectedDonationAmount = amount;
+            customAmount.value = '';
+            
+            // Update button styles
+            donationAmounts.forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            
+            // Highlight selected button
+            event.target.classList.remove('bg-gray-100', 'text-gray-700');
+            event.target.classList.add('bg-primary', 'text-white');
+        }
+
+        async function processDonation() {
+            const amount = customAmount.value || selectedDonationAmount;
+            const message = donationMessage.value.trim();
+            const email = document.getElementById('contact-email') ? document.getElementById('contact-email').value : '';
+            
+            if (!amount || amount <= 0) {
+                showNotification('Please select or enter a valid donation amount.', 'error');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                // Send donation to backend to create Stripe Checkout session
+                const response = await fetch('http://localhost:4242/create-donation-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount, message, email })
+                });
+                const data = await response.json();
+                hideLoading();
+                if (data.url) {
+                    window.location.href = data.url;
+                } else {
+                    showNotification('Failed to start donation: ' + (data.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                hideLoading();
+                showNotification('Failed to start donation. Please try again or contact us directly.', 'error');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const bgColor = type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-blue-600';
+            const notification = document.createElement('div');
+            notification.className = `fixed bottom-6 left-1/2 transform -translate-x-1/2 ${bgColor} text-white px-4 py-2 rounded-lg shadow-lg flex items-center z-50`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'success' ? 'check-circle' : 'info-circle'} mr-2"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Donation event listeners
+        donationAmounts.forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectDonationAmount(parseFloat(btn.dataset.amount));
+            });
+        });
+
+        // Custom amount input
+        customAmount.addEventListener('input', () => {
+            if (customAmount.value) {
+                selectedDonationAmount = 0;
+                // Reset amount buttons
+                donationAmounts.forEach(btn => {
+                    btn.classList.remove('bg-primary', 'text-white');
+                    btn.classList.add('bg-gray-100', 'text-gray-700');
+                });
+            }
+        });
+
+        // Donate button
+        donateBtn.addEventListener('click', processDonation);
+
+        // Donation event listeners
+        donationClose.addEventListener('click', closeDonationModal);
+        donationModal.addEventListener('click', (e) => {
+            if (e.target === donationModal) {
+                closeDonationModal();
+            }
+        });
+
+        // Donation amount selection
+        donationAmounts.forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectDonationAmount(parseFloat(btn.dataset.amount));
+            });
+        });
+
+        // Add this function near the other cart/checkout functions
+        async function checkoutCart(cartItems) {
+            try {
+                console.log('checkoutCart called with:', cartItems);
+                showLoading();
+                
+                // Filter out sold out items (product ID 4)
+                const validItems = cartItems.filter(item => item.id !== 4);
+                console.log('Valid items after filtering:', validItems);
+                
+                if (validItems.length === 0) {
+                    hideLoading();
+                    showNotification('No valid items in cart', 'error');
+                    return;
+                }
+
+                console.log('Making API call to:', 'http://localhost:4242/create-checkout-session');
+                console.log('Request body:', JSON.stringify({ items: validItems }));
+                
+                const response = await fetch('http://localhost:4242/create-checkout-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: validItems })
+                });
+
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (data.url) {
+                    // Clear cart after successful checkout initiation
+                    cart = [];
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartCount();
+                    renderCartItems();
+                    
+                    // Close cart sidebar
+                    cartSidebar.classList.add('translate-x-full');
+                    overlay.classList.add('hidden');
+                    
+                    console.log('Redirecting to:', data.url);
+                    // Redirect to Stripe Checkout
+                    window.location.href = data.url;
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+            } catch (error) {
+                console.error('Checkout error:', error);
+                hideLoading();
+                showNotification('Checkout failed: ' + error.message, 'error');
+            }
+        }
+
+        // Contact Form Handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contact-form');
+            const contactSubmitBtn = document.getElementById('contact-submit-btn');
+            const contactBtnText = document.getElementById('contact-btn-text');
+            const contactBtnLoading = document.getElementById('contact-btn-loading');
+
+            if (contactForm) {
+                contactForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const formData = new FormData(contactForm);
+                    const name = formData.get('name');
+                    const email = formData.get('email');
+                    const subject = formData.get('subject');
+                    const message = formData.get('message');
+
+                    // Show loading state
+                    contactSubmitBtn.disabled = true;
+                    contactBtnText.textContent = 'Sending...';
+                    contactBtnLoading.classList.remove('hidden');
+
+                    try {
+                        // Send email using EmailJS
+                        const templateParams = {
+                            from_name: name,
+                            from_email: email,
+                            subject: subject,
+                            message: message,
+                            to_email: 'hello@nuvepet.com' // Your email address
+                        };
+
+                        // You'll need to replace these with your actual EmailJS service and template IDs
+                        const response = await emailjs.send(
+                            'service_01', // Replace with your EmailJS service ID
+                            'template_aaqidse', // Replace with your EmailJS template ID
+                            templateParams
+                        );
+
+                        console.log('Email sent successfully:', response);
+                        
+                        // Show success message
+                        showNotification('Message sent successfully! We\'ll get back to you soon.', 'success');
+                        
+                        // Reset form
+                        contactForm.reset();
+                        
+                    } catch (error) {
+                        console.error('Email sending failed:', error);
+                        showNotification('Failed to send message. Please try again or contact us directly.', 'error');
+                    } finally {
+                        // Reset button state
+                        contactSubmitBtn.disabled = false;
+                        contactBtnText.textContent = 'Send Message';
+                        contactBtnLoading.classList.add('hidden');
+                    }
+                });
+            }
+        });
+
+        // Live Chat Widget: Set online/offline message based on CET time
+        function isSupportOnlineCET() {
+            // Get current time in CET (Central European Time, UTC+1 or UTC+2 with DST)
+            const now = new Date();
+            // Convert to CET/CEST
+            const cetNow = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Stockholm' }));
+            const day = cetNow.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+            const hour = cetNow.getHours();
+            // Support is online Mon-Fri, 9-17 (9am-5pm)
+            const isWeekday = day >= 1 && day <= 5;
+            const isInHours = hour >= 9 && hour < 17;
+            return isWeekday && isInHours;
+        }
+
+        function updateChatStatusMessage() {
+            const chatStatusMessage = document.getElementById('chat-status-message');
+            const chatSupportHours = document.getElementById('chat-support-hours');
+            if (!chatStatusMessage) return;
+            if (isSupportOnlineCET()) {
+                chatStatusMessage.innerHTML = '<p class="text-sm text-green-700"><strong>Our team is online.</strong> Feel free to leave a message!</p>';
+                if (chatSupportHours) {
+                    chatSupportHours.textContent = 'Our support hours are Monday-Friday, 9am-5pm CET.';
+                }
+            } else {
+                chatStatusMessage.innerHTML = '<p class="text-sm">Hi there! 👋 Our team is currently <span class="text-red-600 font-semibold">offline</span>. Please leave us a message and we\'ll get back to you as soon as possible.</p>';
+                if (chatSupportHours) {
+                    chatSupportHours.textContent = 'Our support hours are Monday-Friday, 9am-5pm CET.';
+                }
+            }
+        }
+        // Update on load and whenever chat widget is opened
+        document.addEventListener('DOMContentLoaded', updateChatStatusMessage);
+        chatToggle.addEventListener('click', updateChatStatusMessage);
+    </script>
+</body>
+
+</html>

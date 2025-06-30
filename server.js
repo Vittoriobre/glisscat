@@ -36,12 +36,6 @@ app.use(cors({
 
 app.use(express.json());
 
-// Serve static files from frontend directory
-app.use(express.static(path.join(__dirname, 'frontend')));
-
-// Serve images
-app.use('/images', express.static(path.join(__dirname, 'images')));
-
 // Map your product IDs to Stripe price IDs
 const PRODUCT_PRICE_MAP = {
   1: 'price_1RfUliDfRnaFvmpAk4NWnx01', // Cat Scratcher - 429 kr
@@ -168,21 +162,6 @@ app.post('/create-donation-session', async (req, res) => {
     console.error('Error creating donation session:', err);
     res.status(500).json({ error: 'Server error' });
   }
-});
-
-// Serve the main page
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
-});
-
-// Serve legal page
-app.get('/legal', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'legal.html'));
-});
-
-// Handle all other routes by serving the main page (for SPA routing)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
 const serverless = require('serverless-http');
