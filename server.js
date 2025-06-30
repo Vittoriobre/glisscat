@@ -44,10 +44,10 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Map your product IDs to Stripe price IDs
 const PRODUCT_PRICE_MAP = {
-  1: 'price_1RfV0FDfRnaFvmpAByGd7MhH', // Cat Scratcher - 429 kr
-  2: 'price_1RfV1LDfRnaFvmpAksIRqLoV', // Stone Diamond Bowl - 399 kr
-  3: 'price_1RfV0dDfRnaFvmpAB3im1OvA', // Premium Cat Bag - 699 kr
-  4: 'price_1RfV1kDfRnaFvmpAiUhxekEj', // Fountain (if needed) - 349 kr
+  1: 'price_1RfUliDfRnaFvmpAk4NWnx01', // Cat Scratcher - 429 kr
+  2: 'price_1RfUlhDfRnaFvmpAvVrgYaEf', // Stone Diamond Bowl - 399 kr
+  3: 'price_1RfUlhDfRnaFvmpAHLwbXNNb', // Premium Cat Bag - 699 kr
+  4: 'price_1RfihbDfRnaFvmpAkgrhGifJ', // Fountain (if needed) - 349 kr
 };
 
 // API Routes
@@ -185,5 +185,4 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
-const PORT = process.env.PORT || 4242;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`)); 
+module.exports = app; 
