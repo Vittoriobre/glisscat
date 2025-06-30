@@ -148,7 +148,7 @@
     </div>
 
     <!-- Header -->
-    <header class="sticky top-0 z-50 bg-white shadow-sm">
+    <header class="sticky top-0 z-60 bg-white shadow-sm">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <!-- Logo -->
             <a href="#" class="flex items-center">
@@ -177,11 +177,11 @@
         </div>
     </header>
 
-    <!-- Mobile Menu -->
+    <!-- Mobile Menu (moved directly after header) -->
     <div id="mobile-menu"
-        class="fixed inset-0 z-40 bg-white transform translate-x-full transition-transform duration-300 ease-in-out md:hidden"
+        class="fixed top-0 left-0 right-0 bottom-0 z-50 bg-white transform translate-x-full transition-transform duration-300 ease-in-out md:hidden"
         style="background-color: #fff;">
-        <div class="container mx-auto px-4 py-8">
+        <div class="container mx-auto px-4 py-8 pt-20"> <!-- pt-20 to push below header -->
             <div class="flex justify-between items-center mb-8">
                 <span class="text-2xl font-bold text-primary">Nuvepet</span>
                 <button id="mobile-menu-close" class="text-dark hover:text-primary">
@@ -189,9 +189,9 @@
                 </button>
             </div>
             <nav class="flex flex-col space-y-6">
-                <a href="#products" class="text-dark hover:text-primary font-medium text-lg">Shop</a>
-                <a href="#about" class="text-dark hover:text-primary font-medium text-lg">About</a>
-                <a href="#contact" class="text-dark hover:text-primary font-medium text-lg">Contact</a>
+                <a href="#products" class="text-dark hover:text-primary font-medium text-lg transition duration-200 hover:bg-gray-100 rounded px-2 py-1">Shop</a>
+                <a href="#about" class="text-dark hover:text-primary font-medium text-lg transition duration-200 hover:bg-gray-100 rounded px-2 py-1">About</a>
+                <a href="#contact" class="text-dark hover:text-primary font-medium text-lg transition duration-200 hover:bg-gray-100 rounded px-2 py-1">Contact</a>
             </nav>
         </div>
     </div>
@@ -1325,9 +1325,18 @@
             // Show modal
             productModal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            // Push state to history
+            if (!location.hash.startsWith('#product-')) {
+                history.pushState({ modal: true, productId }, '', `#product-${productId}`);
+            }
         }
 
         function closeProductModal() {
+            // If the hash is a product modal, go back in history
+            if (location.hash.startsWith('#product-')) {
+                history.back();
+                return;
+            }
             productModal.classList.add('hidden');
             document.body.style.overflow = 'auto';
             currentProduct = null;
@@ -1502,9 +1511,15 @@
 
         // Toggle mobile menu
         mobileMenuToggle.addEventListener('click', () => {
-            mobileMenu.classList.remove('translate-x-full');
-            overlay.classList.remove('hidden');
-            overlay.style.pointerEvents = 'auto';
+            if (mobileMenu.classList.contains('translate-x-full')) {
+                mobileMenu.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                overlay.style.pointerEvents = 'auto';
+            } else {
+                mobileMenu.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+                overlay.style.pointerEvents = 'none';
+            }
         });
 
         mobileMenuClose.addEventListener('click', () => {
@@ -2212,6 +2227,25 @@
         // Update on load and whenever chat widget is opened
         document.addEventListener('DOMContentLoaded', updateChatStatusMessage);
         chatToggle.addEventListener('click', updateChatStatusMessage);
+
+        // Listen for popstate/hashchange to close modal if open
+        window.addEventListener('popstate', () => {
+            if (location.hash.startsWith('#product-')) {
+                // If hash is a product modal, open the correct modal
+                const id = parseInt(location.hash.replace('#product-', ''));
+                if (products[id]) {
+                    openProductModal(id);
+                }
+            } else {
+                // If hash is not a product modal, close the modal
+                if (!productModal.classList.contains('hidden')) {
+                    productModal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                    currentProduct = null;
+                    currentImageIndex = 0;
+                }
+            }
+        });
     </script>
 </body>
 
