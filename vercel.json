@@ -2,15 +2,17 @@
   "version": 2,
   "builds": [
     {
-      "src": "server.js",
+      "src": "api/server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
-    {
-      "src": "/images/(.*)",
-      "dest": "/images/$1"
-    },
+    { 
+      "src": "/api/(.*)", 
+      "dest": "api/server.js"
+  },
+
+  { "src": "/(.*)", "dest": "/public/$1" },
     {
       "src": "/favicon.ico",
       "dest": "/frontend/favicon.ico"
