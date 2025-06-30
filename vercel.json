@@ -12,6 +12,18 @@
       "dest": "/images/$1"
     },
     {
+      "src": "/favicon.ico",
+      "dest": "/frontend/favicon.ico"
+    },
+    {
+      "src": "/favicon.png",
+      "dest": "/frontend/favicon.png"
+    },
+    {
+      "src": "/js/(.*)",
+      "dest": "/frontend/js/$1"
+    },
+    {
       "src": "/legal",
       "dest": "/legal"
     },
