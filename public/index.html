@@ -133,6 +133,10 @@
                 box-shadow: 0 0 0 0 rgba(156, 175, 136, 0.4);
             }
         }
+
+        #overlay {
+            pointer-events: none;
+        }
     </style>
     <link rel="icon" type="image/png" href="../images/nuvepet-logo.png">
 </head>
@@ -175,7 +179,8 @@
 
     <!-- Mobile Menu -->
     <div id="mobile-menu"
-        class="fixed inset-0 z-40 bg-white transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+        class="fixed inset-0 z-40 bg-white transform translate-x-full transition-transform duration-300 ease-in-out md:hidden"
+        style="background-color: #fff;">
         <div class="container mx-auto px-4 py-8">
             <div class="flex justify-between items-center mb-8">
                 <span class="text-2xl font-bold text-primary">Nuvepet</span>
@@ -839,22 +844,25 @@
                 <!-- Status message will be set by JS -->
             </div>
 
-            <form class="space-y-3">
+            <form id="chat-form" class="space-y-3">
                 <div>
-                    <input type="text" placeholder="Your name"
+                    <input type="text" id="chat-name" name="name" placeholder="Your name" required
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
                 </div>
                 <div>
-                    <input type="email" placeholder="Your email"
+                    <input type="email" id="chat-email" name="email" placeholder="Your email" required
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
                 </div>
                 <div>
-                    <textarea placeholder="How can we help?" rows="3"
+                    <textarea id="chat-message" name="message" placeholder="How can we help?" rows="3" required
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"></textarea>
                 </div>
-                <button type="submit"
-                    class="w-full bg-primary hover:bg-opacity-90 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300">
-                    Send Message
+                <button type="submit" id="chat-submit-btn"
+                    class="w-full bg-primary hover:bg-opacity-90 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300 flex items-center justify-center">
+                    <span id="chat-btn-text">Send Message</span>
+                    <div id="chat-btn-loading" class="hidden ml-2">
+                        <div class="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                    </div>
                 </button>
             </form>
 
@@ -1067,7 +1075,7 @@
                     "../images/CatScratcher.png",
                     "../images/Catscratcher2.png",
                     "../images/CatScratcher3.png",
-                    "../images/CatScratcher4.png",
+                    "../images/Catscratcher4.png",
                     "../images/Catscratcher5.jpeg"
                 ],
                 description: "Durable, eco-friendly scratching ball that cats love! Made from natural sisal and recycled materials, this toy satisfies your cat's natural scratching instincts while protecting your furniture.",
@@ -1470,29 +1478,39 @@
         cartToggle.addEventListener('click', () => {
             cartSidebar.classList.remove('translate-x-full');
             overlay.classList.remove('hidden');
+            overlay.style.pointerEvents = 'auto';
             renderCartItems();
         });
 
         cartClose.addEventListener('click', () => {
             cartSidebar.classList.add('translate-x-full');
             overlay.classList.add('hidden');
+            overlay.style.pointerEvents = 'none';
         });
 
         overlay.addEventListener('click', () => {
-            cartSidebar.classList.add('translate-x-full');
-            overlay.classList.add('hidden');
-            mobileMenu.classList.add('translate-x-full');
+            if (!cartSidebar.classList.contains('translate-x-full')) {
+                cartSidebar.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+                overlay.style.pointerEvents = 'none';
+            } else if (!mobileMenu.classList.contains('translate-x-full')) {
+                mobileMenu.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+                overlay.style.pointerEvents = 'none';
+            }
         });
 
         // Toggle mobile menu
         mobileMenuToggle.addEventListener('click', () => {
             mobileMenu.classList.remove('translate-x-full');
             overlay.classList.remove('hidden');
+            overlay.style.pointerEvents = 'auto';
         });
 
         mobileMenuClose.addEventListener('click', () => {
             mobileMenu.classList.add('translate-x-full');
             overlay.classList.add('hidden');
+            overlay.style.pointerEvents = 'none';
         });
 
         // Toggle chat widget
@@ -2091,6 +2109,71 @@
                         contactSubmitBtn.disabled = false;
                         contactBtnText.textContent = 'Send Message';
                         contactBtnLoading.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Chat Form Handler
+            const chatForm = document.getElementById('chat-form');
+            const chatSubmitBtn = document.getElementById('chat-submit-btn');
+            const chatBtnText = document.getElementById('chat-btn-text');
+            const chatBtnLoading = document.getElementById('chat-btn-loading');
+
+            if (chatForm) {
+                chatForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const formData = new FormData(chatForm);
+                    const name = formData.get('name');
+                    const email = formData.get('email');
+                    const message = formData.get('message');
+
+                    // Show loading state
+                    chatSubmitBtn.disabled = true;
+                    chatBtnText.textContent = 'Sending...';
+                    chatBtnLoading.classList.remove('hidden');
+
+                    try {
+                        // Send email using EmailJS
+                        const templateParams = {
+                            from_name: name,
+                            from_email: email,
+                            subject: 'Chat Message from ' + name,
+                            message: message,
+                            to_email: 'hello@nuvepet.com' // Your email address
+                        };
+
+                        // You'll need to replace these with your actual EmailJS service and template IDs
+                        const response = await emailjs.send(
+                            'service_01', // Replace with your EmailJS service ID
+                            'template_aaqidse', // Replace with your EmailJS template ID
+                            templateParams
+                        );
+
+                        console.log('Chat message sent successfully:', response);
+                        
+                        // Show success message
+                        showNotification('Message sent successfully! We\'ll get back to you soon.', 'success');
+                        
+                        // Reset form
+                        chatForm.reset();
+                        
+                        // Close chat widget
+                        chatWidget.classList.add('translate-y-4');
+                        chatWidget.classList.add('opacity-0');
+                        setTimeout(() => {
+                            chatWidget.classList.add('hidden');
+                        }, 300);
+                        
+                    } catch (error) {
+                        console.error('Chat message sending failed:', error);
+                        showNotification('Failed to send message. Please try again or contact us directly.', 'error');
+                    } finally {
+                        // Reset button state
+                        chatSubmitBtn.disabled = false;
+                        chatBtnText.textContent = 'Send Message';
+                        chatBtnLoading.classList.add('hidden');
                     }
                 });
             }
