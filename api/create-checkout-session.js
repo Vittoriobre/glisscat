@@ -4,7 +4,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const PRODUCT_PRICE_MAP = {
   1: 'price_1RfUliDfRnaFvmpAk4NWnx01', // Cat Scratcher - 429 kr
   2: 'price_1RfUlhDfRnaFvmpAvVrgYaEf', // Stone Diamond Bowl - 399 kr
-  3: 'price_1RfV1kDfRnaFvmpAiUhxekEj', // Premium Cat Bag - 699 kr
+  3: 'price_1RfUliDfRnaFvmpAVcZ6GRNT', // Premium Cat Bag - 699 kr
   4: 'price_1RfihbDfRnaFvmpAkgrhGifJ', // Fountain (if needed) - 349 kr
 };
 
