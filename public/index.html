@@ -2310,6 +2310,11 @@
                 }
             });
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Always hide loading spinner on page load
+            if (loadingSpinner) loadingSpinner.classList.add('hidden');
+        });
     </script>
 </body>
 
