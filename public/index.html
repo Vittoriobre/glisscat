@@ -143,14 +143,14 @@
             z-index: 50 !important;
         }
 
-        /* Ensure cart sidebar is below header but above other elements */
+        /* Ensure cart sidebar is above overlay */
         #cart-sidebar {
-            z-index: 40 !important;
+            z-index: 50 !important;
         }
-
-        /* Ensure product modal is below cart sidebar */
-        #product-modal {
-            z-index: 30 !important;
+        /* Overlay below cart sidebar */
+        #overlay {
+            z-index: 40 !important;
+            /* pointer-events: none;  <-- REMOVE this line */
         }
     </style>
     <link rel="icon" type="image/png" href="../images/nuvepet-logo.png">
@@ -166,9 +166,9 @@
     <header class="sticky top-0 z-50 bg-white shadow-sm">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <!-- Logo -->
-            <a href="#" class="flex items-center">
-                <img src="../images/nuvepet-logo.png" alt="Nuvepet Logo" class="h-10 w-10 mr-2" style="object-fit:contain;">
-                <span class="text-2xl font-bold text-primary">Nuvepet</span>
+            <a href="#" id="nuvepet-logo-link" class="flex items-center">
+                <img src="../images/nuvepet-logo.png" alt="Nuvepet Logo" class="h-10 w-10 mr-2 cursor-pointer" style="object-fit:contain;">
+                <span class="text-2xl font-bold text-primary cursor-pointer">Nuvepet</span>
             </a>
 
             <!-- Desktop Navigation -->
@@ -180,7 +180,7 @@
 
             <!-- Cart and Mobile Menu Button -->
             <div class="flex items-center space-x-4">
-                <button id="cart-toggle" class="relative p-3 rounded-lg hover:bg-gray-100 transition duration-300" onclick="event.stopPropagation(); toggleCart()">
+                <button id="cart-toggle" class="relative p-3 rounded-lg hover:bg-gray-100 transition duration-300">
                     <i class="fas fa-shopping-cart text-xl text-dark hover:text-primary"></i>
                     <span id="cart-count"
                         class="absolute -top-2 -right-2 bg-primary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
@@ -823,7 +823,7 @@
                 </button>
 
                 <p class="text-center text-sm text-gray-500 mt-4">
-                    or <a href="#" class="text-primary hover:underline">continue shopping</a>
+                    or <a href="#" id="continue-shopping-link" class="text-primary hover:underline">continue shopping</a>
                 </p>
             </div>
         </div>
@@ -1498,12 +1498,19 @@
             }
         });
 
-        // Toggle cart sidebar
+        // Toggle cart sidebar (toggle open/close)
         function toggleCart() {
-            cartSidebar.classList.remove('translate-x-full');
-            overlay.classList.remove('hidden');
-            overlay.style.pointerEvents = 'auto';
-            renderCartItems();
+            const isOpen = !cartSidebar.classList.contains('translate-x-full');
+            if (isOpen) {
+                cartSidebar.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+                overlay.style.pointerEvents = 'none';
+            } else {
+                cartSidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                overlay.style.pointerEvents = 'auto';
+                renderCartItems();
+            }
         }
 
         cartToggle.addEventListener('click', (e) => {
@@ -1517,12 +1524,17 @@
             overlay.style.pointerEvents = 'none';
         });
 
-        overlay.addEventListener('click', () => {
+        // Overlay click: only close cart if open
+        overlay.addEventListener('click', (e) => {
+            // If cart is open, close it
             if (!cartSidebar.classList.contains('translate-x-full')) {
                 cartSidebar.classList.add('translate-x-full');
                 overlay.classList.add('hidden');
                 overlay.style.pointerEvents = 'none';
-            } else if (!mobileMenu.classList.contains('translate-x-full')) {
+                return;
+            }
+            // If mobile menu is open, close it
+            if (!mobileMenu.classList.contains('translate-x-full')) {
                 mobileMenu.classList.add('translate-x-full');
                 overlay.classList.add('hidden');
                 overlay.style.pointerEvents = 'none';
@@ -2266,6 +2278,38 @@
                 }
             }
         });
+
+        // Continue shopping link: scroll to products and close cart
+        const continueShoppingLink = document.getElementById('continue-shopping-link');
+        if (continueShoppingLink) {
+            continueShoppingLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Close cart
+                cartSidebar.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+                overlay.style.pointerEvents = 'none';
+                // Scroll to products
+                const productsSection = document.getElementById('products');
+                if (productsSection) {
+                    productsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+
+        // Nuvepet logo click: reload homepage
+        const nuvepetLogoLink = document.getElementById('nuvepet-logo-link');
+        if (nuvepetLogoLink) {
+            nuvepetLogoLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Redirect to homepage: '/' in production, '/public/index.html' locally
+                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                if (isLocal) {
+                    window.location.href = window.location.origin + '/public/index.html';
+                } else {
+                    window.location.href = '/';
+                }
+            });
+        }
     </script>
 </body>
 
